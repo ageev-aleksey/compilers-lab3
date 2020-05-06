@@ -1,85 +1,124 @@
-//
-// Created by nrx on 02.05.2020.
-//
 
-#include <list>
+
 #include "ast/Lexer.h"
 #include "ast/Token.h"
-#include "regex/Matcher.h"
+#include "ast/Option.h"
 
-bool isSpace(const char &symbol) {
-    return (symbol == ' ') || (symbol == '\t') || (symbol == '\r');
+Lexer::Lexer(const std::string &text) {
+    this->text = text;
+    current.start = this->text.begin();
+    current.end = current.start;
+    before = current;
 }
 
-std::list<std::string> splitBySpace(const std::string &str) {
-    std::list<std::string> res;
-    std::string tmp;
-    for(auto itr = str.cbegin(); itr != str.cend(); itr++) {
-        if(isSpace(*itr)) {
-            if(tmp.empty()) {
-                continue;
-            }
-            res.push_back(std::move(tmp));
-        } else {
-            tmp.push_back(*itr);
+Token Lexer::makeToken(TokenType type) {
+    before = current;
+    current.step();
+    return {type, before.get()};
+}
+
+Option<LexerError> Lexer::isToken(const std::string &str) {
+    bool isDetected = true;
+    auto state = current.end;
+    for(size_t i = 0; i < str.size(); i++) {
+        if(current.end == text.end() || (++current.end) == text.end()) {
+            current.end = state;
+            return Option<LexerError>(END_OF_TEXT, true);
         }
-
+        if(*current.end != str[i]) {
+            isDetected = false;
+            current.end = state;
+            break;
+        }
     }
-    if(!tmp.empty()) {
-        res.push_back(tmp);
-    }
-    return res;
+
+    return Option<LexerError>(NOT_ERROR, isDetected);
 }
 
-Lexer::Lexer(const std::string &str) {
-    strList = splitBySpace(str);
-    itr = strList.begin();
-}
-
-Lexer::Lexer(const Lexer &lexer) {
-    strList = lexer.strList;
-    itr = lexer.itr;
-}
-
-bool isRelation(const std::string &str) {
-    return (str == "<") || (str == "<=") || (str == "=") || (str == "<>") || (str == ">") || (str == ">=");
-}
-
-bool isId(const std::string &str) {
-//    Matcher matcher = Matcher::compile("(A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|S|Q|W|Y|Z)&(A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|S|Q|W|Y|Z)*");
-//    return matcher.match(str);
-    return str == "$id";
-}
-
-bool isConst(const std::string &str) {
-   // Matcher matcher = Matcher::compile("(0|1|2|3|4|5|6|7|8|9)&(0|1|2|3|4|5|6|7|8|9)*");
-    //return matcher.match(str);
-    return str == "@const";
-}
 
 
 Token Lexer::next() {
-    TokenType type = TokenType::UNDEFINED;
-    for(; itr != strList.end(); ) {
-    if (*itr == "{") {
-        type = TokenType::OBRACKET;
-    } else if(*itr == "}") {
-        type = TokenType::CBRACKET;
-    } else if(*itr == "+" || *itr == "-") {
-            type = TokenType::SUM_OP;
-        } else if (*itr == "*" || *itr == "/") {
-            type = TokenType::MUL_OP;
-        } else if (isRelation(*itr)) {
-            type = TokenType::RELATION;
-        } else if(isId(*itr)) {
-            type = TokenType::ID;
-        } else if(isConst(*itr)) {
-            type = TokenType::CONST;
-        }
-        auto tok = itr;
-        itr++;
-        return {type, *tok};
+    Token token;
+    while((current.end != text.end())
+        && (*current.end == ' ')) {
+        current.step();
     }
-    return {TokenType::END, std::string("")};
+    switch (*current.end) {
+        case '{':
+            token =  makeToken(OBRACKET);
+            break;
+        case'}':
+            token = makeToken(CBRACKET);
+            break;
+        case '(':
+            token =  makeToken(ORBRACKET);
+            break;
+        case ')':
+            token = makeToken(ORBRACKET);
+            break;
+        case ';':
+            token = makeToken(SEMICOLON);
+            break;
+        case '<':
+            if(*(++current.end) != '=' || *current.end != '>')
+                --current.end;
+            token =  makeToken(RELATION);
+            break;
+        case '>':
+            if(*(++current.end) != '=')
+                --current.end;
+            token = makeToken(RELATION);
+            break;
+        case '=':
+            token = makeToken(ASSIGN);
+            break;
+        case '+':
+        case '-':
+            token = makeToken(SUM_OP);
+            break;
+        case '*':
+        case '/':
+            token = makeToken(MUL_OP);
+            break;
+        case '$': {
+            const std::string id("id");
+            const std::string _const("const");
+            Option<LexerError> res = isToken(id);
+            if (res)  {
+                token =  makeToken(ID);
+                break;
+            }
+            if(res.get() != NOT_ERROR) {
+                //TODO Какое должно быть поведение?
+            }
+            res = isToken(_const);
+            if(res) {
+                token =  makeToken(CONST);
+                break;
+            }
+            //TODO какое должно быть поведение если проверки не прошли?
+        }
+
+        default:
+            token =  {UNDEFINED, ""};
+    }
+
+    return token;
+
 }
 
+void Lexer::back() {
+    current = before;
+}
+
+void Lexer::token_itr::step() {
+    end++;
+    start = end;
+}
+
+std::string Lexer::token_itr::get() {
+    std::string res;
+    std::string::iterator tmp = end;
+    std::copy(start, ++tmp, std::back_inserter(res));
+    return res;
+}

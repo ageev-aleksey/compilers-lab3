@@ -8,19 +8,17 @@
 #include <ostream>
 
 enum TokenType {
-    EXPR,
-    AR_EXPR,
-    SUM_OP,
-    MUL_OP,
-    TERM,
-    FACTOR,
-    ID,
-    CONST,
-    RELATION,
-    SEMICOLON,
-    ASSIGNMENT,
     OBRACKET,
     CBRACKET,
+    ORBRACKET,
+    CRBRACKET,
+    SEMICOLON,
+    RELATION,
+    SUM_OP,
+    MUL_OP,
+    ASSIGN,
+    ID,
+    CONST,
     END,
     UNDEFINED
 };

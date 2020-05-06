@@ -5,8 +5,13 @@
 #ifndef LAB3_LEXER_H
 #define LAB3_LEXER_H
 #include "ast/Token.h"
+#include "ast/Option.h"
 #include <string>
 #include <list>
+enum LexerError {
+    END_OF_TEXT,
+    NOT_ERROR
+};
 
 class Lexer {
 public:
@@ -17,9 +22,20 @@ public:
     void back();
 
 private:
-    std::list<std::string> strList;
-    std::list<std::string>::iterator itr;
+    Token makeToken(TokenType);
+    Option<LexerError> isToken(const std::string &str);
+
+    struct token_itr {
+        std::string::iterator start;
+        std::string::iterator end;
+        void step();
+        std::string get();
+    };
+    std::string text;
+    token_itr current;
+    token_itr before;
 };
+
 
 
 #endif //LAB3_LEXER_H

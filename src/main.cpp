@@ -8,10 +8,11 @@
 #include <iostream>
 
 int main() {
-    std::string str("{ $id = @const + @const < @const + @const }");
+    //TODO Добавить в обработку перевод строки и все остальные символы пространства, их надо пропускать
+    std::string str(" { $id=$const+$const<$const      +$const     }   ");
     Lexer l(str);
     Token t = l.next();
-    while(t.type != TokenType::END) {
+    while(t.type != TokenType::UNDEFINED) {
         std::cout << t  << std ::endl;
         t = l.next();
     }

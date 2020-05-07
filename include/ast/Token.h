@@ -26,6 +26,7 @@ enum TokenType {
 struct Token {
     TokenType type;
     std::string value;
+    bool operator==(const Token &other) const;
 };
 
 std::ostream &operator<<(std::ostream &stream, const Token &token);

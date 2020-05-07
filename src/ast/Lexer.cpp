@@ -35,14 +35,20 @@ Option<LexerError> Lexer::isToken(const std::string &str) {
     return Option<LexerError>(NOT_ERROR, isDetected);
 }
 
-
+bool isSpace(const char &v) {
+    return (v == ' ') || (v == '\t') || (v == '\n') || (v == '\r');
+}
 
 Token Lexer::next() {
     Token token;
     while((current.end != text.end())
-        && (*current.end == ' ')) {
+        && (isSpace(*current.end))) {
         current.step();
     }
+    if ((current.end == text.end()) || (*current.end == '\0')) {
+        return {TokenType::END, ""};
+    }
+
     switch (*current.end) {
         case '{':
             token =  makeToken(OBRACKET);
@@ -54,13 +60,13 @@ Token Lexer::next() {
             token =  makeToken(ORBRACKET);
             break;
         case ')':
-            token = makeToken(ORBRACKET);
+            token = makeToken(CRBRACKET);
             break;
         case ';':
             token = makeToken(SEMICOLON);
             break;
         case '<':
-            if(*(++current.end) != '=' || *current.end != '>')
+            if(!(*(++current.end) == '=' || *current.end == '>'))
                 --current.end;
             token =  makeToken(RELATION);
             break;
@@ -70,6 +76,12 @@ Token Lexer::next() {
             token = makeToken(RELATION);
             break;
         case '=':
+            if(*(++current.end) == '=') {
+                token = makeToken(RELATION);
+                break;
+            } else {
+                --current.end;
+            }
             token = makeToken(ASSIGN);
             break;
         case '+':

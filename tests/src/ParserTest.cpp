@@ -8,7 +8,7 @@
 
 
 TEST(ParserTest, test1) {
-    std::string text = "{ $id=$const < $id}";
+    std::string text = "{ $id = $const * ( $id +$id) < ($id+$const)  * ( $const) }";
     Lexer lexer(text);
     Parser parser(lexer);
     auto res = parser.run();

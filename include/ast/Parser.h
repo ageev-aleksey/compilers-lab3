@@ -5,8 +5,12 @@
 #ifndef LAB3_PARSER_H
 #define LAB3_PARSER_H
 
-#include "regex/Graph.h"
+#include <array>
 #include "ast/Lexer.h"
+#include "ast/ParserException.h"
+#include "regex/Graph.h"
+
+
 
 class Parser {
 public:
@@ -27,11 +31,24 @@ private:
     void term_s(Graph_t::iterator node);
     void ar_expr(Graph_t::iterator node);
     void ar_expr_s(Graph_t::iterator node);
-    void relation(Graph_t::iterator node);
-    void mul_op(Graph_t::iterator node);
-    void sum_op(Graph_t::iterator node);
-    void id(Graph_t::iterator node);
-    void _const(Graph_t::iterator node);
+
+    template<std::size_t N>
+    void throwError_GetDontExpectedToken(std::array<TokenType, N> expected) {
+        std::stringstream msg;
+        msg << "In line: " << lexer.line() << "; column: " << lexer.column() << ";\n";
+        if constexpr (N == 1) {
+            msg << "Expected symbol type: " << expected[0];
+        } else {
+            msg << "one of the following characters was expected: ";
+            for(int i = 0; i < N-1; i++) {
+                msg << expected[i] << ", ";
+            }
+            msg << expected[N-1];
+        }
+        msg << "; But the actual type of symbol:" << lexer.get();
+        throw ParserException(msg.str());
+    }
+
     Lexer lexer;
     Graph_t graph;
 };

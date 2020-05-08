@@ -29,5 +29,6 @@ struct Token {
     bool operator==(const Token &other) const;
 };
 
+std::ostream &operator<<(std::ostream &stream, const TokenType &token);
 std::ostream &operator<<(std::ostream &stream, const Token &token);
 #endif //LAB3_TOKEN_H

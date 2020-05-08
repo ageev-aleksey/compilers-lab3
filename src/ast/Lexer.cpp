@@ -8,19 +8,23 @@ Lexer::Lexer(const std::string &text) {
     this->text = text;
     current.start = this->text.begin();
     current.end = current.start;
+    current.start_column = 1;
     before = current;
+    current_line = 1;
 }
 
 Lexer::Lexer(const Lexer &lexer) {
     text = lexer.text;
     current = lexer.current;
     before = lexer.before;
+    current_line = lexer.current_line;
 }
 
 Token Lexer::makeToken(TokenType type) {
     before = current;
     current.step();
-    return {type, before.get()};
+    before_type = type;
+    return {before_type, before.get()};
 }
 
 Option<LexerError> Lexer::isToken(const std::string &str) {
@@ -41,8 +45,25 @@ Option<LexerError> Lexer::isToken(const std::string &str) {
     return Option<LexerError>(NOT_ERROR, isDetected);
 }
 
-bool isSpace(const char &v) {
-    return (v == ' ') || (v == '\t') || (v == '\n') || (v == '\r');
+bool Lexer::isSpace(const char &v) {
+    if(v == '\n') {
+        current_line += 1;
+        current.start_column = 0;
+        return  true;
+    }
+    return (v == ' ') || (v == '\t') || (v == '\r');
+}
+
+Token Lexer::get() {
+    return {before_type, before.get()};
+}
+
+size_t Lexer::line() {
+    return current_line;
+}
+
+size_t Lexer::column() {
+    return before.start_column;
 }
 
 Token Lexer::next() {
@@ -107,7 +128,6 @@ Token Lexer::next() {
                 break;
             }
             if(res.get() != NOT_ERROR) {
-                //TODO Какое должно быть поведение?
                 token = makeToken(UNDEFINED);
             }
             res = isToken(_const);
@@ -115,7 +135,6 @@ Token Lexer::next() {
                 token =  makeToken(CONST);
                 break;
             }
-            //TODO какое должно быть поведение если проверки не прошли?
             token = makeToken(UNDEFINED);
             break;
         }
@@ -134,12 +153,14 @@ void Lexer::back() {
 
 void Lexer::token_itr::step() {
     end++;
+    start_column += std::distance(start, end);
     start = end;
 }
 
 std::string Lexer::token_itr::get() {
     std::string res;
     std::string::iterator tmp = end;
-    std::copy(start, ++tmp, std::back_inserter(res));
+    tmp++;
+    std::copy(start, tmp, std::back_inserter(res));
     return res;
 }

@@ -2,10 +2,10 @@ digraph {
 "0 (PROG)" -> "1 (BLOCK)" [label=""]
 "1 (BLOCK)" -> "2 ({)" [label=""]
 "1 (BLOCK)" -> "3 (OP_LIST)" [label=""]
-"1 (BLOCK)" -> "24 (})" [label=""]
+"1 (BLOCK)" -> "83 (})" [label=""]
 "2 ({)"
 "3 (OP_LIST)" -> "4 (OP)" [label=""]
-"3 (OP_LIST)" -> "22 (TAIL)" [label=""]
+"3 (OP_LIST)" -> "81 (TAIL)" [label=""]
 "4 (OP)" -> "5 (ID)" [label=""]
 "4 (OP)" -> "7 (=)" [label=""]
 "4 (OP)" -> "8 (EXPR)" [label=""]
@@ -13,27 +13,107 @@ digraph {
 "6 ($id)"
 "7 (=)"
 "8 (EXPR)" -> "9 (AR_EXPR)" [label=""]
-"8 (EXPR)" -> "14 (EXPR_S)" [label=""]
+"8 (EXPR)" -> "39 (EXPR_S)" [label=""]
 "9 (AR_EXPR)" -> "10 (CONST)" [label=""]
 "9 (AR_EXPR)" -> "12 (TERM_S)" [label=""]
-"9 (AR_EXPR)" -> "13 (AR_EXPR_S)" [label=""]
+"9 (AR_EXPR)" -> "37 (AR_EXPR_S)" [label=""]
 "10 (CONST)" -> "11 ($const)" [label=""]
 "11 ($const)"
-"12 (TERM_S)"
-"13 (AR_EXPR_S)"
-"14 (EXPR_S)" -> "15 (<RELATION>)" [label=""]
-"14 (EXPR_S)" -> "17 (AR_EXPR)" [label=""]
-"15 (<RELATION>)" -> "16 (<)" [label=""]
-"16 (<)"
-"17 (AR_EXPR)" -> "18 (ID)" [label=""]
-"17 (AR_EXPR)" -> "20 (TERM_S)" [label=""]
-"17 (AR_EXPR)" -> "21 (AR_EXPR_S)" [label=""]
-"18 (ID)" -> "19 ($id)" [label=""]
-"19 ($id)"
-"20 (TERM_S)"
-"21 (AR_EXPR_S)"
-"22 (TAIL)" -> "23 (<EPSILON>)" [label=""]
-"23 (<EPSILON>)"
-"24 (})"
+"12 (TERM_S)" -> "13 (MUL_OP)" [label=""]
+"12 (TERM_S)" -> "14 (FACTOR)" [label=""]
+"12 (TERM_S)" -> "35 (TERM_S)" [label=""]
+"13 (MUL_OP)"
+"14 (FACTOR)" -> "15 (ORBRACKET)" [label=""]
+"14 (FACTOR)" -> "17 (AR_EXPR)" [label=""]
+"14 (FACTOR)" -> "33 (cRBRACKET)" [label=""]
+"15 (ORBRACKET)" -> "16 (()" [label=""]
+"16 (()"
+"17 (AR_EXPR)" -> "18 (AR_EXPR)" [label=""]
+"18 (AR_EXPR)" -> "19 (ID)" [label=""]
+"18 (AR_EXPR)" -> "21 (TERM_S)" [label=""]
+"18 (AR_EXPR)" -> "23 (AR_EXPR_S)" [label=""]
+"19 (ID)" -> "20 ($id)" [label=""]
+"20 ($id)"
+"21 (TERM_S)" -> "22 (<EPSILON>)" [label=""]
+"22 (<EPSILON>)"
+"23 (AR_EXPR_S)" -> "24 (SUM_OP)" [label=""]
+"23 (AR_EXPR_S)" -> "26 (TERM)" [label=""]
+"23 (AR_EXPR_S)" -> "31 (AR_EXPR_S)" [label=""]
+"24 (SUM_OP)" -> "25 (+)" [label=""]
+"25 (+)"
+"26 (TERM)" -> "27 (ID)" [label=""]
+"26 (TERM)" -> "29 (TERM_S)" [label=""]
+"27 (ID)" -> "28 ($id)" [label=""]
+"28 ($id)"
+"29 (TERM_S)" -> "30 (<EPSILON>)" [label=""]
+"30 (<EPSILON>)"
+"31 (AR_EXPR_S)" -> "32 (<EPSILON>)" [label=""]
+"32 (<EPSILON>)"
+"33 (cRBRACKET)" -> "34 ())" [label=""]
+"34 ())"
+"35 (TERM_S)" -> "36 (<EPSILON>)" [label=""]
+"36 (<EPSILON>)"
+"37 (AR_EXPR_S)" -> "38 (<EPSILON>)" [label=""]
+"38 (<EPSILON>)"
+"39 (EXPR_S)" -> "40 (RELATION)" [label=""]
+"39 (EXPR_S)" -> "42 (AR_EXPR)" [label=""]
+"40 (RELATION)" -> "41 (<)" [label=""]
+"41 (<)"
+"42 (AR_EXPR)" -> "43 (ORBRACKET)" [label=""]
+"42 (AR_EXPR)" -> "45 (AR_EXPR)" [label=""]
+"42 (AR_EXPR)" -> "60 (CRBRACKET)" [label=""]
+"42 (AR_EXPR)" -> "62 (TERM_S)" [label=""]
+"42 (AR_EXPR)" -> "79 (AR_EXPR_S)" [label=""]
+"43 (ORBRACKET)" -> "44 (()" [label=""]
+"44 (()"
+"45 (AR_EXPR)" -> "46 (ID)" [label=""]
+"45 (AR_EXPR)" -> "48 (TERM_S)" [label=""]
+"45 (AR_EXPR)" -> "50 (AR_EXPR_S)" [label=""]
+"46 (ID)" -> "47 ($id)" [label=""]
+"47 ($id)"
+"48 (TERM_S)" -> "49 (<EPSILON>)" [label=""]
+"49 (<EPSILON>)"
+"50 (AR_EXPR_S)" -> "51 (SUM_OP)" [label=""]
+"50 (AR_EXPR_S)" -> "53 (TERM)" [label=""]
+"50 (AR_EXPR_S)" -> "58 (AR_EXPR_S)" [label=""]
+"51 (SUM_OP)" -> "52 (+)" [label=""]
+"52 (+)"
+"53 (TERM)" -> "54 (CONST)" [label=""]
+"53 (TERM)" -> "56 (TERM_S)" [label=""]
+"54 (CONST)" -> "55 ($const)" [label=""]
+"55 ($const)"
+"56 (TERM_S)" -> "57 (<EPSILON>)" [label=""]
+"57 (<EPSILON>)"
+"58 (AR_EXPR_S)" -> "59 (<EPSILON>)" [label=""]
+"59 (<EPSILON>)"
+"60 (CRBRACKET)" -> "61 ())" [label=""]
+"61 ())"
+"62 (TERM_S)" -> "63 (MUL_OP)" [label=""]
+"62 (TERM_S)" -> "64 (FACTOR)" [label=""]
+"62 (TERM_S)" -> "77 (TERM_S)" [label=""]
+"63 (MUL_OP)"
+"64 (FACTOR)" -> "65 (ORBRACKET)" [label=""]
+"64 (FACTOR)" -> "67 (AR_EXPR)" [label=""]
+"64 (FACTOR)" -> "75 (cRBRACKET)" [label=""]
+"65 (ORBRACKET)" -> "66 (()" [label=""]
+"66 (()"
+"67 (AR_EXPR)" -> "68 (AR_EXPR)" [label=""]
+"68 (AR_EXPR)" -> "69 (CONST)" [label=""]
+"68 (AR_EXPR)" -> "71 (TERM_S)" [label=""]
+"68 (AR_EXPR)" -> "73 (AR_EXPR_S)" [label=""]
+"69 (CONST)" -> "70 ($const)" [label=""]
+"70 ($const)"
+"71 (TERM_S)" -> "72 (<EPSILON>)" [label=""]
+"72 (<EPSILON>)"
+"73 (AR_EXPR_S)" -> "74 (<EPSILON>)" [label=""]
+"74 (<EPSILON>)"
+"75 (cRBRACKET)" -> "76 ())" [label=""]
+"76 ())"
+"77 (TERM_S)" -> "78 (<EPSILON>)" [label=""]
+"78 (<EPSILON>)"
+"79 (AR_EXPR_S)" -> "80 (<EPSILON>)" [label=""]
+"80 (<EPSILON>)"
+"81 (TAIL)" -> "82 (<EPSILON>)" [label=""]
+"82 (<EPSILON>)"
+"83 (})"
 }
-

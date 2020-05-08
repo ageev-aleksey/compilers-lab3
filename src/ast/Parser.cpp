@@ -2,8 +2,12 @@
 // Created by nrx on 07.05.2020.
 //
 
+#include <ast/ParserException.h>
+#include <sstream>
 #include "ast/Parser.h"
 #include "ast/NonTerminals.h"
+
+
 
 
 Parser::Graph_t::iterator Parser::createNode(std::string value, Parser::Graph_t ::iterator linked) {
@@ -25,8 +29,13 @@ Parser::Graph_t::iterator Parser::createNode(std::string value, Parser::Graph_t 
  * <prog> := <block>
  */
 void Parser::prog() {
-    auto root = graph.addNodeInBack(NonTerminals::PROG);
-    block(root);
+    try {
+        auto root = graph.addNodeInBack(NonTerminals::PROG);
+        block(root);
+    } catch (ParserException &exp) {
+        std::cout << "Parsing Error: " << exp.what() << std::endl;
+    }
+
 }
 
 /**
@@ -42,11 +51,10 @@ void Parser::block(Parser::Graph_t ::iterator node) {
         if(tok.type == CBRACKET) {
             auto closeBracketNode = createNode(tok.value, blockNode);
         } else {
-            //TODO обработка ошибок
+           throwError_GetDontExpectedToken(std::array<TokenType, 1>{CBRACKET});
         }
-
     } else {
-        //TODO обработка ошибок
+        throwError_GetDontExpectedToken(std::array<TokenType, 1>{OBRACKET});
     }
 }
 
@@ -74,9 +82,9 @@ void Parser::op(Parser::Graph_t ::iterator node) {
         if(tok.type == CBRACKET) {
             auto closeBracketNode = createNode(tok.value, opNode);
         } else {
-            //TODO обработка ошибок
+            throwError_GetDontExpectedToken(std::array<TokenType, 1>{OBRACKET});
         }
-    } else if (tok.type == ID){
+    } else if (tok.type == ID) {
         auto idNode = createNode("ID", opNode);
         createNode(tok.value, idNode);
         tok = lexer.next();
@@ -84,8 +92,10 @@ void Parser::op(Parser::Graph_t ::iterator node) {
             auto assignNode = createNode(tok.value, opNode);
             expr(opNode);
         } else {
-            //TODO обработка ошибок
+            throwError_GetDontExpectedToken(std::array<TokenType, 1>{ASSIGN});
         }
+    } else {
+        throwError_GetDontExpectedToken(std::array<TokenType, 2>{OBRACKET, ID});
     }
 }
 
@@ -123,10 +133,9 @@ void Parser::expr(Graph<std::string, Empty>::iterator node) {
  */
 void Parser::expr_s(Parser::Graph_t ::iterator node) {
     auto expr_sNode = createNode(NonTerminals::EXPR_S, node);
-    //TODO для того чтобы определять, что тут надо применить Эпсилон необходимо возвращать результат работы в виде bool
     Token tok = lexer.next();
     if(tok.type == RELATION) {
-        auto relationNode = createNode("<RELATION>", expr_sNode);
+        auto relationNode = createNode("RELATION", expr_sNode);
         createNode(tok.value, relationNode);
         ar_expr(expr_sNode);
     } else {
@@ -162,13 +171,13 @@ void Parser::factor(Parser::Graph_t ::iterator node) {
                 auto crbracketNode = createNode("cRBRACKET", factorNode);
                 createNode(tok.value, crbracketNode);
             } else {
-                //TODO обработка ошибок
+                throwError_GetDontExpectedToken(std::array<TokenType, 1>{CRBRACKET});
             }
             break;
         }
         default:
-            break;
-            //TODO обработка ошибок
+            throwError_GetDontExpectedToken(std::array<TokenType, 3>{ID, CONST,ORBRACKET});
+
     }
 }
 
@@ -206,8 +215,11 @@ void Parser::term(Parser::Graph_t ::iterator node) {
                 createNode(tok.value, crbracketNode);
                 term_s(termNode);
             } else {
-                //TODO сделать обработку ошибок
+                throwError_GetDontExpectedToken(std::array<TokenType, 1>{CRBRACKET});
             }
+        }
+        default:{
+            throwError_GetDontExpectedToken(std::array<TokenType, 3>{ID, CONST, ORBRACKET});
         }
     }
 }
@@ -224,7 +236,7 @@ void Parser::term_s(Parser::Graph_t ::iterator node) {
         factor(termSNode);
         term_s(termSNode);
     } else {
-        //EPSILON
+        createNode("<EPSILON>", termSNode);
         lexer.back();
     }
 }
@@ -261,14 +273,14 @@ void Parser::ar_expr(Parser::Graph_t::iterator node) {
                 auto crbracketNode = createNode("CRBRACKET", arExprNode);
                 createNode(tok.value, crbracketNode);
              } else {
-                //TODO обработка ошибок
+                throwError_GetDontExpectedToken(std::array<TokenType, 1>{CRBRACKET});
             }
             term_s(arExprNode);
             ar_expr_s(arExprNode);
             break;
         }
         default: {
-            //TODO Обработка ошибок
+            throwError_GetDontExpectedToken(std::array<TokenType, 3>{ID, CONST, ORBRACKET});
         }
     }
 }
@@ -286,6 +298,7 @@ void Parser::ar_expr_s(Graph<std::string, Empty>::iterator node) {
         term(arExprSNode);
         ar_expr_s(arExprSNode);
     } else {
+        createNode("<EPSILON>", arExprSNode);
         lexer.back();
     }
 }
@@ -293,5 +306,3 @@ void Parser::ar_expr_s(Graph<std::string, Empty>::iterator node) {
 /**
  * <relation> :=  ‘<’|’<=’|’>’|’>=’|’<>’
 */
-void Parser::relation(Parser::Graph_t::iterator node) {
-}

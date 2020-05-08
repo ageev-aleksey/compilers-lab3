@@ -19,21 +19,29 @@ public:
     Lexer(const Lexer &lexer);
 
     Token next();
+    Token get();
+    size_t line();
+    size_t column();
     void back();
 
 private:
     Token makeToken(TokenType);
     Option<LexerError> isToken(const std::string &str);
+    bool isSpace(const char &v);
 
     struct token_itr {
         std::string::iterator start;
         std::string::iterator end;
+        size_t start_column;
         void step();
         std::string get();
+
     };
     std::string text;
     token_itr current;
     token_itr before;
+    size_t current_line;
+    TokenType before_type;
 };
 
 

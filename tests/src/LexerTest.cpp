@@ -89,3 +89,36 @@ TEST(LexerTest, UndefinedSymbols) {
     Token tok = lexer.next();
     ASSERT_EQ(tok.type, TokenType::UNDEFINED);
 }
+
+TEST(LexerTest, lineCheck) {
+    std::string text = "{$id=$const;\n$id=($const+$const)}";
+    Lexer lexer(text);
+    lexer.next();
+    ASSERT_EQ(1, lexer.line());
+    ASSERT_EQ(1, lexer.column());
+    lexer.next();
+    ASSERT_EQ(1, lexer.line());
+    ASSERT_EQ(2, lexer.column());
+    lexer.next();
+    ASSERT_EQ(1, lexer.line());
+    ASSERT_EQ(5, lexer.column());
+    lexer.next();
+    ASSERT_EQ(1, lexer.line());
+    ASSERT_EQ(6, lexer.column());
+    lexer.next();
+    ASSERT_EQ(1, lexer.line());
+    ASSERT_EQ(12, lexer.column());
+    lexer.next();
+    ASSERT_EQ(2, lexer.line());
+    ASSERT_EQ(1, lexer.column());
+    lexer.next();
+    ASSERT_EQ(2, lexer.line());
+    ASSERT_EQ(4, lexer.column());
+    lexer.next();
+    ASSERT_EQ(2, lexer.line());
+    ASSERT_EQ(5, lexer.column());
+    lexer.next();
+    ASSERT_EQ(2, lexer.line());
+    ASSERT_EQ(6, lexer.column());
+
+}

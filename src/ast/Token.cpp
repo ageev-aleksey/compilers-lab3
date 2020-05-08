@@ -54,3 +54,49 @@ std::ostream &operator<<(std::ostream &stream, const Token &token)
 }
 return stream;
 }
+
+std::ostream &operator<<(std::ostream &stream, const TokenType &token)
+{
+    switch(token) {
+        case ID:
+            stream << "ID";
+            break;
+        case CONST:
+            stream << "CONST";
+            break;
+        case RELATION:
+            stream << "RELATION";
+            break;
+        case SEMICOLON:
+            stream << "SEMICOLON";
+            break;
+        case ASSIGN:
+            stream << "ASSIGNMENT";
+            break;
+        case OBRACKET:
+            stream << "OBRACKET";
+            break;
+        case CBRACKET:
+            stream << "CBRACKET";
+            break;
+        case CRBRACKET:
+            stream << "CRBRACKET";
+            break;
+        case ORBRACKET:
+            stream << "ORBRACKET";
+            break;
+        case SUM_OP:
+            stream << "SUM_OP";
+            break;
+        case MUL_OP:
+            stream << "MUL_OP";
+            break;
+        case END:
+            stream << "END";
+            break;
+        case UNDEFINED:
+            stream << "UNDEFINED";
+            break;
+    }
+    return stream;
+}

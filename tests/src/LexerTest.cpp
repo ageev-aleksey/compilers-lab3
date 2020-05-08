@@ -82,3 +82,10 @@ TEST(LexerTest, testBack) {
     tok = lexer.next();
     ASSERT_EQ(tok, ok2);
 }
+
+TEST(LexerTest, UndefinedSymbols) {
+    std::string text="const";
+    Lexer lexer(text);
+    Token tok = lexer.next();
+    ASSERT_EQ(tok.type, TokenType::UNDEFINED);
+}

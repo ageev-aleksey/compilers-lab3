@@ -1,0 +1,39 @@
+digraph {
+"0 (PROG)" -> "1 (BLOCK)" [label=""]
+"1 (BLOCK)" -> "2 ({)" [label=""]
+"1 (BLOCK)" -> "3 (OP_LIST)" [label=""]
+"1 (BLOCK)" -> "24 (})" [label=""]
+"2 ({)"
+"3 (OP_LIST)" -> "4 (OP)" [label=""]
+"3 (OP_LIST)" -> "22 (TAIL)" [label=""]
+"4 (OP)" -> "5 (ID)" [label=""]
+"4 (OP)" -> "7 (=)" [label=""]
+"4 (OP)" -> "8 (EXPR)" [label=""]
+"5 (ID)" -> "6 ($id)" [label=""]
+"6 ($id)"
+"7 (=)"
+"8 (EXPR)" -> "9 (AR_EXPR)" [label=""]
+"8 (EXPR)" -> "14 (EXPR_S)" [label=""]
+"9 (AR_EXPR)" -> "10 (CONST)" [label=""]
+"9 (AR_EXPR)" -> "12 (TERM_S)" [label=""]
+"9 (AR_EXPR)" -> "13 (AR_EXPR_S)" [label=""]
+"10 (CONST)" -> "11 ($const)" [label=""]
+"11 ($const)"
+"12 (TERM_S)"
+"13 (AR_EXPR_S)"
+"14 (EXPR_S)" -> "15 (<RELATION>)" [label=""]
+"14 (EXPR_S)" -> "17 (AR_EXPR)" [label=""]
+"15 (<RELATION>)" -> "16 (<)" [label=""]
+"16 (<)"
+"17 (AR_EXPR)" -> "18 (ID)" [label=""]
+"17 (AR_EXPR)" -> "20 (TERM_S)" [label=""]
+"17 (AR_EXPR)" -> "21 (AR_EXPR_S)" [label=""]
+"18 (ID)" -> "19 ($id)" [label=""]
+"19 ($id)"
+"20 (TERM_S)"
+"21 (AR_EXPR_S)"
+"22 (TAIL)" -> "23 (<EPSILON>)" [label=""]
+"23 (<EPSILON>)"
+"24 (})"
+}
+

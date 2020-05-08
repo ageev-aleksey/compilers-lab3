@@ -49,7 +49,7 @@ std::ostream &operator<<(std::ostream &stream, const Token &token)
             stream << "{END, }";
             break;
         case UNDEFINED:
-            stream << "{UNDEFINED, }";
+            stream << "{UNDEFINED, '" << token.value << "'}";
             break;
 }
 return stream;

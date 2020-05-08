@@ -11,6 +11,12 @@ Lexer::Lexer(const std::string &text) {
     before = current;
 }
 
+Lexer::Lexer(const Lexer &lexer) {
+    text = lexer.text;
+    current = lexer.current;
+    before = lexer.before;
+}
+
 Token Lexer::makeToken(TokenType type) {
     before = current;
     current.step();
@@ -102,6 +108,7 @@ Token Lexer::next() {
             }
             if(res.get() != NOT_ERROR) {
                 //TODO Какое должно быть поведение?
+                token = makeToken(UNDEFINED);
             }
             res = isToken(_const);
             if(res) {
@@ -109,10 +116,12 @@ Token Lexer::next() {
                 break;
             }
             //TODO какое должно быть поведение если проверки не прошли?
+            token = makeToken(UNDEFINED);
+            break;
         }
 
         default:
-            token =  {UNDEFINED, ""};
+            token =  makeToken(UNDEFINED);
     }
 
     return token;

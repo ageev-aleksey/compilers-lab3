@@ -1,0 +1,29 @@
+//
+// Created by nrx on 07.05.2020.
+//
+
+#ifndef COMPILERS_NONTERMINALS_H
+#define COMPILERS_NONTERMINALS_H
+
+#define STRING_CONST(name) inline static const std::string name = #name
+
+class NonTerminals {
+public:
+    STRING_CONST(PROG);
+    STRING_CONST(BLOCK);
+    STRING_CONST(OP_LIST);
+    STRING_CONST(OP);
+    STRING_CONST(TAIL);
+    STRING_CONST(EXPR);
+    STRING_CONST(EXPR_S);
+    STRING_CONST(FACTOR);
+    STRING_CONST(TERM);
+    STRING_CONST(TERM_S);
+    STRING_CONST(AR_EXPR);
+    STRING_CONST(AR_EXPR_S);
+};
+
+
+
+
+#endif //COMPILERS_NONTERMINALS_H

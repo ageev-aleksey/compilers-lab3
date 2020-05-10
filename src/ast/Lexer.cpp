@@ -26,6 +26,7 @@ Token Lexer::makeToken(TokenType type) {
     current.step();
     before_type = type;
     Token tok = {before_type, before.get()};
+    before.end = before.start;
     std::cout << tok << std::endl;
     return tok;
 }
@@ -58,7 +59,9 @@ bool Lexer::isSpace(const char &v) {
 }
 
 Token Lexer::get() {
-    return {before_type, before.get()};
+    this->back();
+    Token tok = this->next();
+    return tok;
 }
 
 size_t Lexer::line() {

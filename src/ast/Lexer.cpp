@@ -3,6 +3,7 @@
 #include "ast/Lexer.h"
 #include "ast/Token.h"
 #include "ast/Option.h"
+#include <iostream>
 
 Lexer::Lexer(const std::string &text) {
     this->text = text;
@@ -24,7 +25,9 @@ Token Lexer::makeToken(TokenType type) {
     before = current;
     current.step();
     before_type = type;
-    return {before_type, before.get()};
+    Token tok = {before_type, before.get()};
+    std::cout << tok << std::endl;
+    return tok;
 }
 
 Option<LexerError> Lexer::isToken(const std::string &str) {

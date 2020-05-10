@@ -217,6 +217,7 @@ void Parser::term(Parser::Graph_t ::iterator node) {
             } else {
                 throwError_GetDontExpectedToken(std::array<TokenType, 1>{CRBRACKET});
             }
+            break;
         }
         default:{
             throwError_GetDontExpectedToken(std::array<TokenType, 3>{ID, CONST, ORBRACKET});
@@ -232,7 +233,8 @@ void Parser::term_s(Parser::Graph_t ::iterator node) {
     auto termSNode = createNode(NonTerminals::TERM_S, node);
     Token tok = lexer.next();
     if(tok.type == MUL_OP) {
-        createNode("MUL_OP", termSNode);
+        auto mulNode = createNode("MUL_OP", termSNode);
+        createNode(tok.value, mulNode);
         factor(termSNode);
         term_s(termSNode);
     } else {

@@ -1,0 +1,8 @@
+{
+	$id = $const + $id*$const;
+	$id = $const <> $const;
+
+	{
+		$id = (($const+$id)*($id-$const)) < (($const+$id)/($id-$const))
+	}
+}

@@ -6,6 +6,7 @@
 #define LAB3_PARSER_H
 
 #include <array>
+#include <sstream>
 #include "ast/Lexer.h"
 #include "ast/ParserException.h"
 #include "regex/Graph.h"
